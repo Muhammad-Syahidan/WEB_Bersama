@@ -1,6 +1,5 @@
 <?php 
     // QUERY: HANYA ambil data dari tabel detail_jual (Tanpa Join)
-    // Sesuai instruksi: iddetailjual, nota, kode, jumlah, total_harga
     $sql = "SELECT 
                 iddetailjual,
                 nota,
@@ -147,6 +146,14 @@
 
         .table-print { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11pt; color: black; }
         .table-print th, .table-print td { border: 1px solid black !important; padding: 6px 8px; }
-        .table-print th { background-color: #f0f0f0 !important; font-weight: bold; text-align: center; -webkit-print-color-adjust: exact; }
+        
+        /* INI BAGIAN YANG DIPERBAIKI */
+        .table-print th { 
+            background-color: #f0f0f0 !important; 
+            font-weight: bold; 
+            text-align: center; 
+            -webkit-print-color-adjust: exact; 
+            print-color-adjust: exact; /* Penambahan ini menghilangkan warning */
+        }
     }
 </style>
