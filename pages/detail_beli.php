@@ -1,102 +1,159 @@
-<div class="user-management">
-    <h3 class="fw-bold mb-3 text-light">Detail Pembelian</h3>
-    <hr class="border-secondary">
+<?php 
+    // QUERY JOIN 3 TABEL:
+    // 1. detail_beli (Data Barang Masuk)
+    // 2. pembelian (Untuk ambil Tanggal via Faktur)
+    // 3. databarang (Untuk ambil Nama Barang via ID/Kode)
+    
+    $sql = "SELECT 
+                detail_beli.faktur,
+                pembelian.tanggal,
+                databarang.nama,
+                detail_beli.jumlah,
+                detail_beli.total_harga
+            FROM 
+                detail_beli
+            LEFT JOIN 
+                pembelian ON detail_beli.faktur = pembelian.faktur
+            LEFT JOIN 
+                databarang ON detail_beli.kode = databarang.id
+            ORDER BY 
+                pembelian.tanggal DESC, detail_beli.faktur ASC";
+    
+    $result = $conn->query($sql);
+    
+    // Simpan data ke array
+    $data_detail = [];
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $data_detail[] = $row;
+        }
+    }
+?>
 
-    <div class="mb-3">
-        <a href="main.php?p=pembelian_input" class="btn btn-primary shadow-sm">Tambah Pembelian</a>
+<div class="user-management no-print">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-light">Laporan Rincian Pembelian</h3>
+        <button onclick="window.print()" class="btn btn-success shadow-sm">
+            <i class="bi bi-printer-fill me-2"></i> Cetak Laporan
+        </button>
     </div>
-
-    <?php 
-        // QUERY JOIN: Ambil Detail + Stock + Harga
-        $sql = "SELECT 
-                    detail_beli.iddetailbeli,
-                    detail_beli.faktur,
-                    detail_beli.kode,
-                    stock.jumlah AS stok_real,
-                    harga.harga_beli
-                FROM 
-                    detail_beli
-                LEFT JOIN 
-                    stock ON detail_beli.kode = stock.kode
-                LEFT JOIN 
-                    harga ON detail_beli.kode = harga.kode
-                ORDER BY 
-                    detail_beli.faktur ASC";
-        
-        $result = $conn->query($sql);
-    ?>
+    
+    <hr class="border-secondary">
 
     <div class="table-responsive mt-3">
         <table class="table table-dark table-striped table-hover align-middle rounded-3 overflow-hidden">
             <thead class="text-center bg-gradient-primary text-white">
                 <tr>
-                    <th style="width: 60px;">ID</th>
-                    <th>Faktur</th>
-                    <th>Kode</th>
-                    <th>Jumlah (Stock)</th>
-                    <th>Total Harga</th>
-                    <th style="width: 150px;">Aksi</th>
+                    <th style="width: 50px;">No</th>
+                    <th style="width: 150px;">Faktur</th>
+                    <th style="width: 120px;">Tanggal</th>
+                    <th>Nama Barang</th>
+                    <th style="width: 80px;">Jml</th>
+                    <th style="width: 150px;">Subtotal</th>
                 </tr>
             </thead>
-
             <tbody class="text-center">
-                <?php if ($result && $result->num_rows > 0): ?>
-                    <?php 
-                        $grand_total_semua = 0; // Variabel penampung total
-                    ?>
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                        <?php 
-                            $id     = $row['iddetailbeli'];
-                            $faktur = $row['faktur'];
-                            $kode   = $row['kode'];
-                            $jumlah = !empty($row['stok_real']) ? $row['stok_real'] : 0;
-                            $harga  = !empty($row['harga_beli']) ? $row['harga_beli'] : 0;
-                            
-                            // Hitung Per Baris
-                            $total_baris = $jumlah * $harga;
-                            
-                            // Tambahkan ke Grand Total
-                            $grand_total_semua += $total_baris;
-
-                            // Warna Faktur
-                            $warna = 'text-warning';
-                            if($faktur == 'A1') $warna = 'text-info';
-                            if($faktur == 'A2') $warna = 'text-success';
-                        ?>
-                        <tr>
-                            <td><?= $id ?></td>
-                            <td class="fw-bold <?= $warna ?>"><?= $faktur ?></td>
-                            <td class="text-light"><?= $kode ?></td>
-                            <td><?= $jumlah ?></td>
-                            <td class="text-end pe-4 text-success fw-bold">
-                                Rp <?= number_format($total_baris, 0, ',', '.') ?>
-                            </td>
-                            <td>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="main.php?p=detail_beli_edit&id=<?= $id ?>" 
-                                       class="btn btn-info btn-sm px-2 text-white">Edit</a>
-                                    
-                                    <a href="main.php?p=detail_beli_hapus&id=<?= $id ?>" 
-                                       class="btn btn-danger btn-sm px-2"
-                                       onclick="return confirm('Hapus data ini?')">Hapus</a>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                    
-                    <tr class="fw-bold bg-secondary text-white" style="border-top: 2px solid white;">
-                        <td colspan="4" class="text-end pe-3 fs-5">TOTAL PENGELUARAN KESELURUHAN:</td>
-                        <td class="text-end pe-4 text-warning fs-4">
-                            Rp <?= number_format($grand_total_semua, 0, ',', '.') ?>
-                        </td>
-                        <td></td> </tr>
-
-                <?php else: ?>
+                <?php if (!empty($data_detail)): $no = 1; $grand_total = 0; foreach ($data_detail as $row): 
+                    $grand_total += $row['total_harga'];
+                ?>
                     <tr>
-                        <td colspan="6" class="text-center py-4">Data Kosong</td>
+                        <td class="fw-semibold"><?= $no++ ?></td>
+                        <td class="fw-bold text-info"><?= htmlspecialchars($row['faktur']) ?></td>
+                        <td><?= htmlspecialchars($row['tanggal']) ?></td>
+                        <td class="text-start ps-4 text-capitalize"><?= htmlspecialchars($row['nama']) ?></td>
+                        <td><?= htmlspecialchars($row['jumlah']) ?></td>
+                        <td class="text-warning fw-bold">
+                            Rp <?= number_format($row['total_harga'], 0, ',', '.') ?>
+                        </td>
                     </tr>
+                <?php endforeach; ?>
+                    <tr class="fw-bold bg-secondary">
+                        <td colspan="5" class="text-end pe-3">TOTAL PENGELUARAN:</td>
+                        <td class="text-warning fs-5">Rp <?= number_format($grand_total, 0, ',', '.') ?></td>
+                    </tr>
+                <?php else: ?>
+                    <tr><td colspan="6" class="py-4">Belum ada rincian data.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
+
+<div id="print-area">
+    
+    <div class="header-print">
+        <img src="img/Avatar3.png" alt="Logo">
+        <h2>PT. MINECRAFT LOVERS</h2>
+        <h3>Laporan Rincian Barang Masuk</h3>
+    </div>
+
+    <table class="table-print">
+        <thead>
+            <tr>
+                <th style="width: 40px;">No</th>
+                <th style="width: 120px;">Faktur</th>
+                <th style="width: 100px;">Tanggal</th>
+                <th>Nama Barang</th>
+                <th style="width: 60px;">Qty</th>
+                <th style="width: 120px;">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($data_detail)): $no = 1; $grand_total_print = 0; foreach ($data_detail as $row): 
+                $grand_total_print += $row['total_harga'];
+            ?>
+                <tr>
+                    <td style="text-align: center;"><?= $no++ ?></td>
+                    <td style="text-align: center;"><?= htmlspecialchars($row['faktur']) ?></td>
+                    <td style="text-align: center;"><?= htmlspecialchars($row['tanggal']) ?></td>
+                    <td><?= htmlspecialchars($row['nama']) ?></td>
+                    <td style="text-align: center;"><?= htmlspecialchars($row['jumlah']) ?></td>
+                    <td style="text-align: right; padding-right: 10px;">
+                        Rp <?= number_format($row['total_harga'], 0, ',', '.') ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+                <tr>
+                    <td colspan="5" style="text-align: right; font-weight: bold; padding-right: 15px; border: 1px solid black;">TOTAL PENGELUARAN :</td>
+                    <td style="text-align: right; font-weight: bold; padding-right: 10px; border: 1px solid black;">
+                        Rp <?= number_format($grand_total_print, 0, ',', '.') ?>
+                    </td>
+                </tr>
+            <?php else: ?>
+                <tr><td colspan="6" style="text-align: center;">Data Kosong</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+
+<style>
+    #print-area { display: none; }
+
+    @media print {
+        @page { margin: 0; size: auto; }
+        body * { visibility: hidden !important; }
+        #print-area, #print-area * { visibility: visible !important; }
+
+        #print-area {
+            display: block !important;
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 40px !important;
+            background-color: white !important;
+            color: black !important;
+            z-index: 99999 !important;
+        }
+
+        .header-print { text-align: center; margin-bottom: 20px; border-bottom: 2px solid black; padding-bottom: 10px; }
+        .header-print img { width: 80px; height: auto; display: block; margin: 0 auto 5px auto; }
+        .header-print h2 { font-size: 22px; font-weight: bold; margin: 5px 0; text-transform: uppercase; color: black; }
+        .header-print h3 { font-size: 16px; font-weight: normal; margin: 0; color: black; }
+
+        .table-print { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11pt; color: black; }
+        .table-print th, .table-print td { border: 1px solid black !important; padding: 6px 8px; }
+        .table-print th { background-color: #f0f0f0 !important; font-weight: bold; text-align: center; }
+    }
+</style>

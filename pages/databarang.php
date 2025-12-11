@@ -1,152 +1,130 @@
-<div class="user-management">
-    <h3 class="fw-bold mb-3 text-light">Data Barang</h3>
+<?php 
+    // Ambil data barang (Pastikan query benar)
+    $sql = "SELECT * FROM databarang WHERE hapus = 0 ORDER BY nama ASC";
+    $result = $conn->query($sql);
+    
+    // Simpan data ke array dulu agar bisa dipakai 2 kali (Tampilan Web & Tampilan Cetak)
+    $data_barang = [];
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $data_barang[] = $row;
+        }
+    }
+?>
+
+<div class="user-management no-print">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-light">Data Barang</h3>
+        <button onclick="window.print()" class="btn btn-success shadow-sm">
+            <i class="bi bi-printer-fill me-2"></i> Cetak Laporan
+        </button>
+    </div>
+    
     <hr class="border-secondary">
-
-    <!-- Tombol Tambah barang -->
-
-        <div class="mb-3">
-            <a href="main.php?p=databarang_input" class="btn btn-primary shadow-sm">Tambah Barang</a>
-        </div>
-  
-
-    <?php 
-        $sql = "SELECT * FROM databarang WHERE hapus = 0";
-        $result = $conn->query($sql);
-    ?>
 
     <div class="table-responsive mt-3">
         <table class="table table-dark table-striped table-hover align-middle rounded-3 overflow-hidden">
             <thead class="text-center bg-gradient-primary text-white">
                 <tr>
-                    <th style="width: 60px;">ID</th>
-                    <th style="width: 90px;">Kode</th>
-                    <th>Nama</th>
-                    <th>Satuan</th>
+                    <th style="width: 50px;">No</th>
+                    <th style="width: 120px;">Kode</th>
+                    <th>Nama Barang</th>
+                    <th style="width: 150px;">Satuan</th>
                 </tr>
             </thead>
-
             <tbody class="text-center">
-                <?php if ($result && $result->num_rows > 0): ?>
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                        <?php 
-                            $id = htmlspecialchars($row['id']);
-                            $kode = htmlspecialchars($row['kode']);
-                            $nama = htmlspecialchars($row['nama']);
-                            $satuan = htmlspecialchars($row['satuan']);
-                            $aktif = $row['aktif'];
-                        ?>
-                        <tr>
-                            <!-- No -->
-                            <td class="fw-semibold"><?= $id ?></td>
-
-                            <!-- User -->
-                            <td class="text-capitalize"><?= $kode ?></td>
-
-                            <!-- Timestamp -->
-                            <td class="text-white small"><?= $nama ?></td>
-
-                            <!-- Keterangan -->
-                            <td class="text-center"><?= $satuan ?></td>
-
-                            <?php if ($auth === "Administrator"): ?>
-           
-                                <!-- Opsi -->
-
-                                <td>
-                                    <div class="d-flex justify-content-center flex-wrap gap-2">
-                                        <a href="main.php?p=databarang_edit&id=<?= $id ?>" 
-                                        class="btn btn-info btn-sm px-3">Edit</a>
-                                        <a href="main.php?p=databarang_hapus&id=<?= $id ?>" 
-                                        class="btn btn-danger btn-sm px-3"
-                                        onclick="return confirm('Yakin ingin menghapus user ini?')">Hapus</a>
-                                    </div>
-                                </td>
-                             <?php endif; ?>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
+                <?php if (!empty($data_barang)): $no = 1; foreach ($data_barang as $row): ?>
                     <tr>
-                        <td colspan="7" class="text-center text-white py-3">
-                            Belum ada data user.
-                        </td>
+                        <td class="fw-semibold"><?= $no++ ?></td>
+                        <td class="fw-bold text-warning"><?= htmlspecialchars($row['kode']) ?></td>
+                        <td class="text-start ps-4 text-capitalize"><?= htmlspecialchars($row['nama']) ?></td>
+                        <td><?= htmlspecialchars($row['satuan']) ?></td>
                     </tr>
+                <?php endforeach; else: ?>
+                    <tr><td colspan="4" class="py-4">Belum ada data.</td></tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
 </div>
 
-<!-- =============================== -->
-<!-- ✨ STYLE TAMBAHAN -->
-<!-- =============================== -->
+<div id="print-area">
+    
+    <div class="header-print">
+        <img src="img/Avatar3.png" alt="Logo">
+        <h2>PT. MINECRAFT LOVERS</h2>
+        <h3>Laporan Data Barang</h3>
+    </div>
+
+    <table class="table-print">
+        <thead>
+            <tr>
+                <th style="width: 50px;">No</th>
+                <th style="width: 120px;">Kode Barang</th>
+                <th>Nama Barang</th>
+                <th style="width: 100px;">Satuan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($data_barang)): $no = 1; foreach ($data_barang as $row): ?>
+                <tr>
+                    <td style="text-align: center;"><?= $no++ ?></td>
+                    <td style="text-align: center;"><?= htmlspecialchars($row['kode']) ?></td>
+                    <td><?= htmlspecialchars($row['nama']) ?></td>
+                    <td style="text-align: center;"><?= htmlspecialchars($row['satuan']) ?></td>
+                </tr>
+            <?php endforeach; else: ?>
+                <tr><td colspan="4" style="text-align: center;">Data Kosong</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+
 <style>
-.user-management {
-    letter-spacing: 0.3px;
-}
+    /* Default: Sembunyikan area cetak di layar laptop */
+    #print-area { display: none; }
 
-.user-management h3 {
-    font-size: 1.6rem;
-    letter-spacing: 0.5px;
-}
+    /* SAAT DIPRINT (CTRL+P) */
+    @media print {
+        
+        /* 1. Hilangkan Header Browser (Tanggal, Judul Page, URL di pojok kertas) */
+        @page { margin: 0; size: auto; }
 
-/* Avatar kecil di tabel */
-.avatar-img {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    object-fit: cover;
-    cursor: zoom-in;
-    border: 2px solid #343a40;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.avatar-img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 8px rgba(255,255,255,0.3);
-}
+        /* 2. Sembunyikan SEMUA elemen website asli (Sidebar, Navbar, Profil, dll) */
+        body * {
+            visibility: hidden !important; 
+        }
 
-/* Overlay saat gambar di-zoom */
-#imageOverlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    cursor: zoom-out;
-}
-#imageOverlay img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 10px;
-    box-shadow: 0 0 25px rgba(255,255,255,0.4);
-    image-rendering: -webkit-optimize-contrast;
-    transition: transform 0.3s ease-in-out;
-}
+        /* 3. Munculkan HANYA #print-area dan isinya */
+        #print-area, #print-area * {
+            visibility: visible !important;
+        }
+
+        /* 4. POSISI MUTLAK: Paksa area print nempel di pojok kiri atas kertas putih */
+        #print-area {
+            display: block !important;
+            position: absolute !important; /* Kunci rahasianya disini */
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 40px !important; /* Beri jarak aman dari pinggir kertas */
+            background-color: white !important;
+            color: black !important;
+            z-index: 99999 !important; /* Pastikan dia di layer paling atas */
+        }
+
+        /* Styling Header Print */
+        .header-print { 
+            text-align: center; margin-bottom: 20px; border-bottom: 2px solid black; padding-bottom: 10px; 
+        }
+        .header-print img { width: 80px; height: auto; display: block; margin: 0 auto 5px auto; }
+        .header-print h2 { font-size: 22px; font-weight: bold; margin: 5px 0; text-transform: uppercase; color: black; }
+        .header-print h3 { font-size: 16px; font-weight: normal; margin: 0; color: black; }
+
+        /* Styling Tabel Print */
+        .table-print { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 12pt; color: black; }
+        .table-print th, .table-print td { border: 1px solid black !important; padding: 8px; }
+        .table-print th { background-color: #f0f0f0 !important; font-weight: bold; text-align: center; }
+    }
 </style>
-
-<!-- =============================== -->
-<!-- ⚡ SCRIPT ZOOM -->
-<!-- =============================== -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const overlay = document.createElement("div");
-    overlay.id = "imageOverlay";
-    overlay.innerHTML = "<img src='' alt='Zoomed Avatar'>";
-    document.body.appendChild(overlay);
-
-    const zoomables = document.querySelectorAll(".zoomable");
-    zoomables.forEach(img => {
-        img.addEventListener("click", () => {
-            const fullImg = overlay.querySelector("img");
-            fullImg.src = img.dataset.full;
-            overlay.style.display = "flex";
-        });
-    });
-
-    // Klik overlay untuk menutup zoom
-    overlay.addEventListener("click", () => {
-        overlay.style.display = "none";
-    });
-});
-</script>
