@@ -22,8 +22,6 @@
                     <th style="width: 90px;">Kode</th>
                     <th>Nama</th>
                     <th>Satuan</th>
-                    <th style="width: 220px;">Opsi</th>
-                    
                 </tr>
             </thead>
 
