@@ -70,7 +70,7 @@
                 <tr>
                     <td style="text-align: center;"><?= $no++ ?></td>
                     <td style="text-align: center;"><?= htmlspecialchars($row['kode']) ?></td>
-                    <td><?= htmlspecialchars($row['nama']) ?></td>
+                    <td style="text-align: center;"><?= htmlspecialchars($row['nama']) ?></td>
                     <td style="text-align: center;"><?= htmlspecialchars($row['satuan']) ?></td>
                 </tr>
             <?php endforeach; else: ?>

@@ -6,19 +6,21 @@ $kode = $_POST['kode'];
 $nama = $_POST['nama'];
 $satuan = $_POST['satuan'];
 
+if (isset($_POST["simpan"])) {
 
-if (isset($_POST["simpan"]))
-
-        $sql = "UPDATE databarang SET 
-            kode='$kode',
-            nama='$nama',
-            satuan='$satuan'
-            WHERE id=$id";
+    $sql = "UPDATE databarang SET kode='$kode', nama='$nama', satuan='$satuan' WHERE id=$id";
 
     if (mysqli_query($conn, $sql)) {
-        echo "<script>alert('Anda Berhasil Mengubah data barang');window.location.href='../main.php?p=databarang';</script>";
+        // REDIRECT PAKE POST
+        echo '<script>alert("Data Berhasil Diubah");</script>';
+        echo '
+        <form id="redirectForm" action="../main.php" method="POST">
+            <input type="hidden" name="p" value="databarang_input">
+        </form>
+        <script>document.getElementById("redirectForm").submit();</script>
+        ';
     } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+        echo "Error: " . mysqli_error($conn);
     }
-
+}
 ?>

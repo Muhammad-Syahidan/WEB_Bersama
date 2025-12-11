@@ -9,7 +9,11 @@ if(isset($_POST['simpan'])){
     $query = mysqli_query($conn, $sql);
 
     if($query){
-        header('Location: ../main.php?p=stock');
+        // UBAH DISINI: Kembali ke halaman Manajemen/Input Stock
+        echo "<script>
+                alert('Stok Berhasil Diupdate!');
+                window.location.href='../main.php?p=stock_input';
+              </script>";
     } else {
         echo "Gagal update: " . mysqli_error($conn);
     }

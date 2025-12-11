@@ -4,7 +4,7 @@
 ?>
 
 <div class="user-management">
-    <h3 class="fw-bold mb-3 text-light">Input Pembelian Barang (Restock)</h3>
+    <h3 class="fw-bold mb-3 text-light">Input Pembelian (Restock)</h3>
     <hr class="border-secondary">
 
     <form action="pages/pembelian_save.php" method="POST">
@@ -23,18 +23,17 @@
         <hr class="border-secondary">
 
         <div class="mb-3">
-            <label class="form-label text-warning">Pilih Barang yang Dibeli:</label>
+            <label class="form-label text-warning">Pilih Barang:</label>
             <select name="kode" class="form-select" required>
                 <option value="">-- Pilih Barang --</option>
                 <?php 
                     // Ambil data barang dari databarang
-                    $sql_brg = "SELECT * FROM databarang ORDER BY nama ASC";
+                    $sql_brg = "SELECT * FROM databarang WHERE hapus = 0 ORDER BY nama ASC";
                     $q_brg = $conn->query($sql_brg);
                     
                     while($r = $q_brg->fetch_assoc()){
-                        // Value kita isi ID atau KODE (Sesuai data di tabel stock nanti)
-                        // Berdasarkan gambar Anda sebelumnya, sepertinya ID yang dipakai relasi
-                        echo "<option value='".$r['id']."'>".$r['nama']." (Kode: ".$r['kode'].")</option>";
+                        // PENTING: Value diisi KODE (A1), bukan ID (1)
+                        echo "<option value='".$r['kode']."'>".$r['nama']." (Kode: ".$r['kode'].")</option>";
                     }
                 ?>
             </select>
@@ -44,7 +43,7 @@
             <div class="col-md-4">
                 <label class="form-label fw-bold">Harga Beli Satuan (Rp):</label>
                 <input type="number" name="harga_beli" id="harga_beli" class="form-control" placeholder="0" required oninput="hitungModal()">
-                <small class="text-muted">Harga dari supplier per unit.</small>
+                <small class="text-muted">Harga modal dari supplier.</small>
             </div>
 
             <div class="col-md-4">
@@ -60,7 +59,7 @@
         </div>
 
         <div class="d-flex justify-content-end gap-2 mt-4">
-            <a href="main.php?p=pembelian" class="btn btn-secondary">Batal</a>
+            <a href="main.php?p=pembelian_manage" class="btn btn-secondary">Batal</a>
             <button type="submit" name="simpan_beli" class="btn btn-primary px-4">
                 <i class="bi bi-save me-2"></i> Simpan Stok
             </button>

@@ -1,29 +1,25 @@
 <?php
-    // Pastikan path koneksi benar
     include "assets/koneksi.php";
 
-    // Ambil ID dari URL
     $idharga = $_GET["idharga"];
 
-    // Query Data (Saya tambahkan JOIN ke databarang agar Nama Barang muncul, biar tidak bingung ini harga barang apa)
+    // PERBAIKAN QUERY: Join ke databarang.kode
     $sql = "SELECT 
                 harga.*, 
                 databarang.nama 
             FROM harga 
-            INNER JOIN databarang ON harga.kode = databarang.id
+            INNER JOIN databarang ON harga.kode = databarang.kode
             WHERE harga.idharga = $idharga";
             
     $result = mysqli_query($conn, $sql);
 
-    // Siapkan variabel default agar tidak error jika data kosong
-    $kode = "";
+    // Default values
     $nama_barang = "";
     $harga_jual = 0;
     $harga_beli = 0;
 
     if (mysqli_num_rows($result) > 0){
         while($row = mysqli_fetch_assoc($result)){
-            $kode = $row['kode'];
             $nama_barang = $row['nama'];
             $harga_jual = $row['harga_jual'];
             $harga_beli = $row['harga_beli'];

@@ -1,82 +1,126 @@
 <?php
-    // Tangkap Kode Barang yang dipilih buyer
-    $kode_dipilih = isset($_GET['kode']) ? $_GET['kode'] : '';
-
-    // Ambil Info Barang tersebut dari Database
-    $sql_info = "SELECT stock.kode, databarang.nama, stock.jumlah, harga.harga_jual 
-                 FROM stock
-                 LEFT JOIN databarang ON stock.kode = databarang.kode
-                 LEFT JOIN harga ON stock.kode = harga.kode
-                 WHERE stock.kode = '$kode_dipilih'";
-    $q_info = $conn->query($sql_info);
-    $data = $q_info->fetch_assoc();
-
-    // Generate Nota Otomatis (INV + TanggalJamDetik) -> Unik
+    // Generate Nota Otomatis
     $nota_otomatis = "INV-" . date('YmdHis');
 ?>
 
 <div class="user-management">
-    <h3 class="fw-bold mb-3 text-light">Konfirmasi Pembelian</h3>
+    <h3 class="fw-bold mb-3 text-light">Input Penjualan (Kasir)</h3>
     <hr class="border-secondary">
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card bg-dark text-white border-primary shadow-lg">
-                <div class="card-header bg-primary text-white fw-bold">
-                    Formulir Pemesanan
+    <form action="pages/penjualan_save.php" method="POST">
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label text-info">No. Nota:</label>
+                <input type="text" name="nota" class="form-control bg-secondary text-white" value="<?= $nota_otomatis ?>" readonly>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Tanggal Transaksi:</label>
+                <input type="date" name="tanggal" class="form-control" value="<?= date('Y-m-d') ?>" required>
+            </div>
+        </div>
+
+        <div class="card bg-dark border-secondary p-3 mb-3">
+            <div class="row">
+                
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-warning">Pilih Barang:</label>
+                    <select name="kode" id="kode_barang" class="form-select" required onchange="cekHarga()">
+                        <option value="" data-harga="0" data-stok="0">-- Pilih Barang --</option>
+                        <?php 
+                            // Query Aman: Menggunakan COALESCE agar jika harga/stok belum ada, dianggap 0 (Tidak Error)
+                            $sql = "SELECT 
+                                        d.kode, 
+                                        d.nama, 
+                                        COALESCE(h.harga_jual, 0) as harga_jual, 
+                                        COALESCE(s.jumlah, 0) as jumlah 
+                                    FROM databarang d
+                                    LEFT JOIN harga h ON d.kode = h.kode
+                                    LEFT JOIN stock s ON d.kode = s.kode
+                                    WHERE d.hapus = 0 
+                                    ORDER BY d.nama ASC";
+                            
+                            $q = $conn->query($sql);
+                            
+                            if ($q) {
+                                while($r = $q->fetch_assoc()){
+                                    // PENTING: Value diisi KODE (A1)
+                                    // Data harga & stok disimpan di atribut 'data-'
+                                    echo "<option value='".$r['kode']."' 
+                                                  data-harga='".$r['harga_jual']."' 
+                                                  data-stok='".$r['jumlah']."'>
+                                          ".$r['nama']." (Stok: ".$r['jumlah'].")
+                                          </option>";
+                                }
+                            }
+                        ?>
+                    </select>
                 </div>
-                <div class="card-body p-4">
-                    <form action="pages/penjualan_save.php" method="POST">
-                        
-                        <input type="hidden" name="kode" value="<?= $data['kode'] ?>">
-                        <input type="hidden" name="nota" value="<?= $nota_otomatis ?>"> 
-                        <input type="hidden" name="tanggal" value="<?= date('Y-m-d') ?>">
-                        <input type="hidden" name="grand_total_jual" id="grand_total_jual" value="<?= $data['harga_jual'] ?>">
 
-                        <div class="text-center mb-4">
-                            <i class="bi bi-box-seam text-warning fs-1"></i>
-                            <h4 class="fw-bold mt-2"><?= $data['nama'] ?></h4>
-                            <p class="text-muted">Harga: Rp <?= number_format($data['harga_jual']) ?> / Unit</p>
-                            <span class="badge bg-secondary">Sisa Stok: <?= $data['jumlah'] ?></span>
-                        </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label text-muted">Stok Tersedia:</label>
+                    <input type="text" id="stok_tersedia" class="form-control bg-secondary text-white border-0" readonly value="0">
+                </div>
+            </div>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Mau beli berapa?</label>
-                            <input type="number" name="jumlah" id="jumlah" class="form-control form-control-lg text-center fw-bold" 
-                                   value="1" min="1" max="<?= $data['jumlah'] ?>" required oninput="hitungTotal()">
-                        </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Harga Jual (Rp):</label>
+                    <input type="number" name="harga_jual" id="harga_jual" class="form-control bg-secondary text-white" readonly required>
+                </div>
 
-                        <div class="mb-4 text-center">
-                            <label class="text-muted small">Total yang harus dibayar:</label>
-                            <h2 class="text-success fw-bold" id="tampilan_total">
-                                Rp <?= number_format($data['harga_jual']) ?>
-                            </h2>
-                            <input type="hidden" name="grand_total_jual" id="grand_total_jual" value="<?= $data['harga_jual'] ?>">
-                        </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold text-success">Jumlah Beli:</label>
+                    <input type="number" name="jumlah" id="jumlah" class="form-control border-success" placeholder="0" min="1" required oninput="hitungTotal()">
+                </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" name="beli_sekarang" class="btn btn-success btn-lg fw-bold">
-                                <i class="bi bi-whatsapp me-2"></i> BAYAR SEKARANG
-                            </button>
-                            <a href="main.php?p=penjualan" class="btn btn-outline-secondary">Batal / Kembali Belanja</a>
-                        </div>
-                    </form>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label text-info">Total Bayar:</label>
+                    <input type="text" id="total_disp" class="form-control bg-dark text-info fw-bold" readonly value="Rp 0">
+                    <input type="hidden" name="grand_total" id="grand_total">
                 </div>
             </div>
         </div>
-    </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <a href="main.php?p=penjualan_manage" class="btn btn-secondary">Batal</a>
+            <button type="submit" name="simpan_jual" class="btn btn-primary px-4">
+                <i class="bi bi-cart-check me-2"></i> Proses Bayar
+            </button>
+        </div>
+
+    </form>
 </div>
 
 <script>
-    function hitungTotal() {
-        let harga = document.getElementById('harga_satuan').value;
-        let jumlah = document.getElementById('jumlah').value;
-        
-        // Hitung
-        let total = parseInt(harga) * parseInt(jumlah);
+function cekHarga() {
+    var select = document.getElementById("kode_barang");
+    var selectedOption = select.options[select.selectedIndex];
+    
+    // Ambil data dari atribut HTML
+    var harga = selectedOption.getAttribute("data-harga") || 0;
+    var stok = selectedOption.getAttribute("data-stok") || 0;
 
-        // Update Tampilan
-        document.getElementById('grand_total_jual').value = total;
-        document.getElementById('tampilan_total').innerText = "Rp " + total.toLocaleString('id-ID');
+    document.getElementById("harga_jual").value = harga;
+    document.getElementById("stok_tersedia").value = stok;
+    
+    hitungTotal(); 
+}
+
+function hitungTotal() {
+    var harga = parseInt(document.getElementById("harga_jual").value) || 0;
+    var jumlah = parseInt(document.getElementById("jumlah").value) || 0;
+    var stok = parseInt(document.getElementById("stok_tersedia").value) || 0;
+
+    // Validasi Stok
+    if(jumlah > stok) {
+        alert("Stok tidak cukup! Sisa stok hanya: " + stok);
+        document.getElementById("jumlah").value = stok; 
+        jumlah = stok;
     }
+
+    var total = harga * jumlah;
+    document.getElementById("grand_total").value = total;
+    document.getElementById("total_disp").value = "Rp " + total.toLocaleString('id-ID');
+}
 </script>

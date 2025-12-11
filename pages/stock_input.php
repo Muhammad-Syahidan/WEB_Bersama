@@ -1,21 +1,21 @@
 <div class="user-management">
-    <h3 class="fw-bold mb-3 text-light">Manajemen Harga Barang</h3>
+    <h3 class="fw-bold mb-3 text-light">Manajemen Stock Gudang</h3>
     <hr class="border-secondary">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="fw-bold text-light mb-0">Daftar Harga Pasar</h4>
+        <h4 class="fw-bold text-light mb-0">Daftar Stock Barang</h4>
     </div>
     
     <?php 
         $sql = "SELECT 
-                    harga.idharga, 
-                    harga.harga_jual,
-                    harga.harga_beli,
+                    stock.idstock, 
+                    stock.kode, 
+                    stock.jumlah,
                     databarang.nama,
                     databarang.kode AS kode_view
-                FROM harga
-                LEFT JOIN databarang ON harga.kode = databarang.kode
-                ORDER BY harga.idharga ASC";
+                FROM stock
+                LEFT JOIN databarang ON stock.kode = databarang.kode 
+                ORDER BY stock.idstock ASC";
         $result = $conn->query($sql);
     ?>
 
@@ -26,8 +26,7 @@
                     <th style="width: 50px;">No</th>
                     <th style="width: 100px;">Kode</th>
                     <th>Nama Barang</th>
-                    <th style="width: 180px;">Harga Beli (Modal)</th>
-                    <th style="width: 180px;">Harga Jual</th>
+                    <th style="width: 150px;">Jumlah Stok</th>
                     <th style="width: 120px;">Aksi</th>
                 </tr>
             </thead>
@@ -40,16 +39,13 @@
                             <td class="fw-semibold"><?= $no++ ?></td>
                             <td class="text-warning fw-bold"><?= htmlspecialchars($row['kode_view']) ?></td>
                             <td class="text-start ps-4 text-capitalize"><?= htmlspecialchars($row['nama']) ?></td>
-                            
-                            <td class="text-secondary">Rp <?= number_format($row['harga_beli'], 0, ',', '.') ?></td>
-                            <td class="text-info fw-bold">Rp <?= number_format($row['harga_jual'], 0, ',', '.') ?></td>
-                            
+                            <td class="fs-5 fw-bold"><?= htmlspecialchars($row['jumlah']) ?></td>
                             <td>
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="main.php?p=harga_edit&idharga=<?= $row['idharga'] ?>" 
-                                       class="btn btn-success btn-sm px-3 text-white" 
-                                       title="Atur Harga">
-                                       <i class="bi bi-currency-dollar"></i> Atur
+                                    <a href="main.php?p=stock_edit&idstock=<?= $row['idstock'] ?>" 
+                                       class="btn btn-info btn-sm px-3 text-white" 
+                                       title="Update Stok">
+                                       <i class="bi bi-pencil-square"></i> Update
                                     </a>
                                 </div>
                             </td>
@@ -57,7 +53,7 @@
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center py-4 text-white">Belum ada data harga.</td>
+                        <td colspan="5" class="text-center py-4 text-white">Belum ada data stock.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

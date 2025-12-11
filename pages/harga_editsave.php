@@ -3,15 +3,18 @@ include "../assets/koneksi.php";
 
 if(isset($_POST['simpan'])){
     
-    // Pastikan teks di dalam kurung siku ['...'] SAMA PERSIS dengan name di form
-    $idharga = $_POST['idharga'];     // Mengambil dari <input name="idharga">
-    $harga   = $_POST['harga_jual'];  // Mengambil dari <input name="harga_jual">
+    $idharga = $_POST['idharga'];
+    // Harga Jual TIDAK DIAMBIL / TIDAK DIUPDATE
+    $harga_beli = $_POST['harga_beli']; 
 
-    // Query Update
-    $sql = "UPDATE harga SET harga_jual='$harga' WHERE idharga='$idharga'";
+    // Query Update HANYA harga_beli
+    $sql = "UPDATE harga SET harga_beli='$harga_beli' WHERE idharga='$idharga'";
 
     if (mysqli_query($conn, $sql)) {
-        echo "<script>alert('Anda Berhasil Mengubah harga jual');window.location.href='../main.php?p=harga';</script>";
+        echo "<script>
+                alert('Harga Beli Berhasil Diperbarui!');
+                window.location.href='../main.php?p=harga_input';
+              </script>";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
