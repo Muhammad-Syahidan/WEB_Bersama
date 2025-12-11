@@ -1,0 +1,47 @@
+.avatar{
+    text-align: center;
+    margin: 24px 0 12px 0;
+    width: 10%;
+    height: 10%;
+    
+}
+
+.rounded-circle{
+    border-radius: 50%;
+}
+
+body {
+    background-image: url('../img/logins.jpg');
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    overflow: hidden;
+}
+
+.view-login{
+    position: relative;
+    width: 100%;
+    max-width: 350px;
+    margin: auto;
+    padding: 20px;
+    background-color: #e0798a;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin-top: 300px;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    transition: transform 0.3s ease;
+    /* margin-left: 300px; */
+}
+
+button{
+    width:auto;
+    background-color:rgb(52, 52, 165);
+    border-radius: 20px;
+    color: #ffffff;
+    padding: 14px 20px;
+    margin: 8px 0;
+    
+}
