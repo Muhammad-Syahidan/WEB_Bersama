@@ -183,5 +183,7 @@ $images=[]; $i=$conn->query("SELECT * FROM images WHERE hapus=1 ORDER BY id DESC
     </div>
 </div>
 <footer class="mt-5 p-3 bg-dark text-white text-center border-top border-secondary"><p>&copy; 2025 - Aplikasi Inventory</p></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
