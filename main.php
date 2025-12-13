@@ -61,7 +61,7 @@ $images=[]; $i=$conn->query("SELECT * FROM images WHERE hapus=1 ORDER BY id DESC
             <li class="nav-item"><a class="nav-link" href="main.php?p=profil">Profil</a></li>
 
             <?php if ($auth === "Administrator"): ?>
-                <li class="nav-item"><a class="nav-link" href="main.php?p=manajuser">User</a></li>
+                <li class="nav-item"><a class="nav-link" href="main.php?p=manajuser">Manajemen User</a></li>
                 <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Galeri</a>
                     <ul class="dropdown-menu"><li><a class="dropdown-item" href="main.php?p=manajvideo">Video</a></li><li><a class="dropdown-item" href="main.php?p=manajimg">Images</a></li><li><a class="dropdown-item" href="main.php?p=manajnews">News</a></li></ul></li>
                 <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Laporan</a>
