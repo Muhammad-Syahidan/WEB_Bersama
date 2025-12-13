@@ -16,7 +16,7 @@ $row = mysqli_fetch_assoc($result);
 <hr>
 
 <form action="pages/manajnews_editsave.php" method="POST" enctype="multipart/form-data">
-    <!-- ID dikirim lewat hidden input -->
+    
     <input type="hidden" name="kode" value="<?= htmlspecialchars($kode) ?>">
 
     <div class="mb-3 mt-3">

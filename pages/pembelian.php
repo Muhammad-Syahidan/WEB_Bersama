@@ -1,5 +1,5 @@
 <?php 
-    // QUERY: Ambil data Pembelian
+   
     $sql = "SELECT idbeli, faktur, tanggal, grand_total_beli 
             FROM pembelian 
             ORDER BY tanggal DESC, idbeli DESC";

@@ -46,15 +46,15 @@
 
 
 <script>
-// mengambil modal
+
 var modal = document.getElementById('id01');
 
-// Saat menekan di luar modal, tutup modal 
+
 
 window.onclick = function(event) {
   if (event.target == modal) {
     modal.style.display = "none";
-    document.getElementById('welcome-box').style.display='block'; // <-- TAMBAHKAN INI
+    document.getElementById('welcome-box').style.display='block';
   }
 }
 </script>

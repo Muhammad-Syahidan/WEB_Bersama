@@ -6,7 +6,7 @@ include "assets/koneksi.php";
     <h3 class="fw-bold mb-3"> Manajemen Gallery Foto</h3>
     <hr class="border-secondary">
 
-    <!-- Tombol Tambah Foto -->
+    
     <div class="mb-3">
         <a href="main.php?p=manajimg_input" class="btn btn-primary shadow-sm">
             Tambah Foto
@@ -81,37 +81,37 @@ include "assets/koneksi.php";
     </div>
 </div>
 
-<!-- Modal Zoom -->
+
 <div id="zoomModal" class="zoom-modal" onclick="closeZoom()">
     <img id="zoomedImage" class="zoomed-image" src="" alt="">
 </div>
 
-<!-- Tooltip & Zoom Script -->
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Tooltip Bootstrap
+   
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
 });
 
-// Zoom in
+
 function zoomImage(img) {
     const zoomModal = document.getElementById("zoomModal");
     const zoomedImage = document.getElementById("zoomedImage");
     zoomedImage.src = img.src;
     zoomModal.style.display = "flex";
-    document.body.style.overflow = "hidden"; // disable scroll saat zoom
+    document.body.style.overflow = "hidden";
 }
 
-// Zoom out
+
 function closeZoom() {
     const zoomModal = document.getElementById("zoomModal");
     zoomModal.style.display = "none";
-    document.body.style.overflow = ""; // aktifkan scroll lagi
+    document.body.style.overflow = "";
 }
 </script>
 
-<!-- CSS -->
+
 <style>
 .image-management h3 {
     letter-spacing: 0.5px;

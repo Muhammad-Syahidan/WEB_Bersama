@@ -3,7 +3,7 @@ include "assets/koneksi.php";
 
     $idstock = $_GET["idstock"];
 
-    // Mengambil data stock saat ini
+   
     $sql = "SELECT * FROM stock WHERE idstock=$idstock";
     $result = mysqli_query($conn, $sql);
 

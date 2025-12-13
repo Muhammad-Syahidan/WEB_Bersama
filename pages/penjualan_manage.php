@@ -8,7 +8,7 @@
         <div class="card-body">
             <div class="row">
                 <?php 
-                    // Query Barang yg stoknya > 0
+                   
                     $sql = "SELECT stock.kode, databarang.nama, stock.jumlah, harga.harga_jual 
                             FROM stock
                             LEFT JOIN databarang ON stock.kode = databarang.kode

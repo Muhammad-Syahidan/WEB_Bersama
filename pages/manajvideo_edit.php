@@ -16,7 +16,7 @@ $row = mysqli_fetch_assoc($result);
 <hr>
 
 <form action="pages/manajvideo_editsave.php" method="POST">
-    <!-- ID dikirim lewat hidden input -->
+    
     <input type="hidden" name="id" value="<?= htmlspecialchars($id) ?>">
 
     <div class="mb-3">

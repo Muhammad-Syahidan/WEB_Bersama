@@ -1,7 +1,7 @@
 <?php
 include "assets/koneksi.php";
 
-// ✅ Validasi parameter kode berita
+
 if (!isset($_GET['kode']) || !is_numeric($_GET['kode'])) {
     echo "<div class='alert alert-warning text-center mt-4'> Berita tidak ditemukan.</div>";
     exit;
@@ -9,7 +9,7 @@ if (!isset($_GET['kode']) || !is_numeric($_GET['kode'])) {
 
 $kode = intval($_GET['kode']);
 
-// ✅ Query berita
+
 $sql = "SELECT * FROM news WHERE kode = ? AND hapus = 1";
 $stmt = $conn->prepare($sql);
 
@@ -22,28 +22,23 @@ $stmt->bind_param("i", $kode);
 $stmt->execute();
 $result = $stmt->get_result();
 
-// ✅ Jika tidak ada data
+
 if (!$result || $result->num_rows === 0) {
     echo "<div class='alert alert-danger text-center mt-4'> Data berita tidak tersedia.</div>";
     exit;
 }
-
-// ✅ Ambil data berita
 $news = $result->fetch_assoc();
 
-// ✅ Pastikan hasil adalah array
+
 if (!is_array($news)) {
     echo "<div class='alert alert-danger text-center mt-4'> Terjadi kesalahan saat membaca data berita.</div>";
     exit;
 }
 ?>
 
-<!-- =============================== -->
-<!-- 📰 DETAIL BERITA -->
-<!-- =============================== -->
+
 <div class="news-detail card bg-dark border-0 shadow-lg text-light p-4 mt-4 rounded-4">
 
-    <!-- Judul -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="fw-bold mb-0 text-light">
             <?= htmlspecialchars($news['jenis_berita'] ?? 'Tidak ada judul') ?>
@@ -55,12 +50,10 @@ if (!is_array($news)) {
 
     <hr class="border-secondary mb-4">
 
-    <!-- Isi Berita -->
     <div class="isi-berita text-justify px-1 mb-4">
         <?= nl2br(htmlspecialchars($news['isi_berita'] ?? 'Konten berita tidak tersedia.')) ?>
     </div>
 
-    <!-- 🔗 Sumber Berita -->
     <div class="sumber-berita px-1 mt-3 pt-3 border-top border-secondary">
         <strong>Sumber:</strong><br>
         <?php
@@ -68,12 +61,12 @@ if (!is_array($news)) {
 
         if (!empty($sumber)) {
             if (filter_var($sumber, FILTER_VALIDATE_URL)) {
-                // Jika berupa URL valid
+            
                 echo '<a href="' . htmlspecialchars($sumber) . '" target="_blank" rel="noopener noreferrer" class="link-sumber">'
                     . htmlspecialchars($sumber)
                     . '</a>';
             } else {
-                // Jika bukan URL, tampilkan teks biasa
+        
                 echo nl2br(htmlspecialchars($sumber));
             }
         } else {
@@ -84,9 +77,6 @@ if (!is_array($news)) {
 
 </div>
 
-<!-- =============================== -->
-<!-- 🧭 STYLE -->
-<!-- =============================== -->
 <style>
 .news-detail {
     max-width: 900px;

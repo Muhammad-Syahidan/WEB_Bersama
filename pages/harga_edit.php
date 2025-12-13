@@ -3,7 +3,7 @@
 
     $idharga = $_GET["idharga"];
 
-    // PERBAIKAN QUERY: Join ke databarang.kode
+   
     $sql = "SELECT 
                 harga.*, 
                 databarang.nama 
@@ -13,7 +13,7 @@
             
     $result = mysqli_query($conn, $sql);
 
-    // Default values
+  
     $nama_barang = "";
     $harga_jual = 0;
     $harga_beli = 0;

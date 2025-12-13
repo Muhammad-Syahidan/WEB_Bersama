@@ -11,7 +11,7 @@ if (isset($_POST["simpan"])) {
     $sql = "UPDATE databarang SET kode='$kode', nama='$nama', satuan='$satuan' WHERE id=$id";
 
     if (mysqli_query($conn, $sql)) {
-        // REDIRECT PAKE POST
+     
         echo '<script>alert("Data Berhasil Diubah");</script>';
         echo '
         <form id="redirectForm" action="../main.php" method="POST">

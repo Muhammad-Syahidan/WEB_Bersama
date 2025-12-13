@@ -24,7 +24,7 @@ if (isset($_POST["simpan"])) {
         $uploadOk = 0;
     }
 
-    // Upload dan simpan ke database
+   
     if ($uploadOk == 1) {
         if (move_uploaded_file($_FILES["images"]["tmp_name"], $target_file)) {
             $sql = "INSERT INTO images (images, keterangan, hapus)

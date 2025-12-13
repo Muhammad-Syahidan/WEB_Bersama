@@ -2,7 +2,6 @@
     <h3 class="fw-bold mb-3 text-light">Manajemen Gallery Berita</h3>
     <hr class="border-secondary">
 
-    <!-- Tombol Tambah Berita -->
     <div class="mb-3">
         <a href="main.php?p=manajnews_input" class="btn btn-primary shadow-sm">
             Tambah Berita
@@ -35,7 +34,6 @@
                             <td class="text-center"><?= htmlspecialchars($row['tanggal']); ?></td>
                             <td class="text-center"><?= htmlspecialchars($row['jenis_berita']); ?></td>
 
-                            <!-- Isi berita singkat dengan tooltip -->
                             <td class="text-start">
                                 <span class="isi-berita" 
                                       data-bs-toggle="tooltip" 
@@ -45,7 +43,6 @@
                                 </span>
                             </td>
 
-                            <!-- Sumber -->
                             <td class="text-start">
                                 <a href="<?= htmlspecialchars($row['sumber']); ?>" 
                                    target="_blank" 
@@ -81,7 +78,6 @@
     </div>
 </div>
 
-<!-- Aktifkan tooltip Bootstrap -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -89,18 +85,17 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-<!-- CSS tambahan -->
 <style>
 .isi-berita {
-    color: #f8f9fa; /* warna teks normal */
-    cursor: pointer; /* kursor berubah jadi pointer saat hover */
+    color: #f8f9fa; 
+    cursor: pointer; 
     transition: color 0.2s ease-in-out;
 }
 .isi-berita:hover {
-    color: #adb5bd; /* sedikit lebih abu saat hover */
+    color: #adb5bd;
 }
 .tooltip-inner {
-    max-width: 400px; /* biar isi tooltip nggak terlalu lebar */
+    max-width: 400px;
     text-align: left;
     font-size: 0.9rem;
 }

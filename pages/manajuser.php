@@ -2,7 +2,7 @@
     <h3 class="fw-bold mb-3 text-light">Manajemen User Aplikasi</h3>
     <hr class="border-secondary">
 
-    <!-- Tombol Tambah User -->
+   
     <div class="mb-3">
         <a href="main.php?p=manajuser_input" class="btn btn-primary shadow-sm">Tambah User</a>
     </div>
@@ -39,10 +39,10 @@
                             $activ = $row['activ'];
                         ?>
                         <tr>
-                            <!-- No -->
+                          
                             <td class="fw-semibold"><?= $id ?></td>
 
-                            <!-- Avatar -->
+                         
                             <td>
                                 <img src="img/<?= $avatar ?>" 
                                      alt="Avatar" 
@@ -50,19 +50,14 @@
                                      data-full="img/<?= $avatar ?>">
                             </td>
 
-                            <!-- User -->
                             <td class="text-capitalize"><?= $user ?></td>
 
-                            <!-- Auth -->
                             <td><?= $auth ?></td>
 
-                            <!-- Timestamp -->
                             <td class="text-start small"><?= $timestamp ?></td>
 
-                            <!-- Keterangan -->
                             <td class="text-start"><?= $keterangan ?></td>
 
-                            <!-- Opsi -->
                             <td>
                                 <div class="d-flex justify-content-center flex-wrap gap-2">
                                     <a href="main.php?p=manajuser_edit&id=<?= $id ?>" 
@@ -93,9 +88,6 @@
     </div>
 </div>
 
-<!-- =============================== -->
-<!-- ✨ STYLE TAMBAHAN -->
-<!-- =============================== -->
 <style>
 .user-management {
     letter-spacing: 0.3px;
@@ -106,7 +98,6 @@
     letter-spacing: 0.5px;
 }
 
-/* Avatar kecil di tabel */
 .avatar-img {
     width: 55px;
     height: 55px;
@@ -121,7 +112,6 @@
     box-shadow: 0 0 8px rgba(255,255,255,0.3);
 }
 
-/* Overlay saat gambar di-zoom */
 #imageOverlay {
     display: none;
     position: fixed;
@@ -142,9 +132,6 @@
 }
 </style>
 
-<!-- =============================== -->
-<!-- ⚡ SCRIPT ZOOM -->
-<!-- =============================== -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const overlay = document.createElement("div");
@@ -161,7 +148,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Klik overlay untuk menutup zoom
     overlay.addEventListener("click", () => {
         overlay.style.display = "none";
     });

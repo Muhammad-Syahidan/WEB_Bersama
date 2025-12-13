@@ -1,6 +1,6 @@
 <?php
     $id = $_GET['id'];
-    // Ambil data harga
+
     $sql = "SELECT harga.*, databarang.nama FROM harga 
             LEFT JOIN databarang ON harga.kode = databarang.kode 
             WHERE idharga='$id'";

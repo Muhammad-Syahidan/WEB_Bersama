@@ -1,9 +1,8 @@
 <?php 
-    // QUERY: Join Harga & Databarang (by Kode)
     $sql = "SELECT 
                 harga.idharga, 
                 databarang.nama, 
-                databarang.kode AS kode_barang, -- Ambil kode dari databarang biar aman
+                databarang.kode AS kode_barang,
                 harga.harga_jual,
                 harga.harga_beli
             FROM 
@@ -16,7 +15,6 @@
     
     $result = $conn->query($sql);
 
-    // Simpan data ke array agar bisa diloop 2 kali (Tampilan Web & Print)
     $data_harga = [];
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -135,7 +133,6 @@
         .table-print { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11pt; color: black; }
         .table-print th, .table-print td { border: 1px solid black !important; padding: 6px 8px; }
         
-        /* FIX WARNING CSS */
         .table-print th { 
             background-color: #f0f0f0 !important; 
             font-weight: bold; 

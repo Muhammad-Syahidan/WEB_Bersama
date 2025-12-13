@@ -1,9 +1,9 @@
 <?php 
-    // Ambil data barang (Pastikan query benar)
+   
     $sql = "SELECT * FROM databarang WHERE hapus = 0 ORDER BY nama ASC";
     $result = $conn->query($sql);
     
-    // Simpan data ke array dulu agar bisa dipakai 2 kali (Tampilan Web & Tampilan Cetak)
+ 
     $data_barang = [];
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -81,40 +81,37 @@
 </div>
 
 <style>
-    /* Default: Sembunyikan area cetak di layar laptop */
+    
     #print-area { display: none; }
 
-    /* SAAT DIPRINT (CTRL+P) */
+   
     @media print {
         
-        /* 1. Hilangkan Header Browser (Tanggal, Judul Page, URL di pojok kertas) */
         @page { margin: 0; size: auto; }
 
-        /* 2. Sembunyikan SEMUA elemen website asli (Sidebar, Navbar, Profil, dll) */
         body * {
             visibility: hidden !important; 
         }
 
-        /* 3. Munculkan HANYA #print-area dan isinya */
+       
         #print-area, #print-area * {
             visibility: visible !important;
         }
 
-        /* 4. POSISI MUTLAK: Paksa area print nempel di pojok kiri atas kertas putih */
+
         #print-area {
             display: block !important;
-            position: absolute !important; /* Kunci rahasianya disini */
+            position: absolute !important; 
             left: 0 !important;
             top: 0 !important;
             width: 100% !important;
             margin: 0 !important;
-            padding: 40px !important; /* Beri jarak aman dari pinggir kertas */
+            padding: 40px !important; 
             background-color: white !important;
             color: black !important;
-            z-index: 99999 !important; /* Pastikan dia di layer paling atas */
+            z-index: 99999 !important; 
         }
 
-        /* Styling Header Print */
         .header-print { 
             text-align: center; margin-bottom: 20px; border-bottom: 2px solid black; padding-bottom: 10px; 
         }
@@ -122,7 +119,6 @@
         .header-print h2 { font-size: 22px; font-weight: bold; margin: 5px 0; text-transform: uppercase; color: black; }
         .header-print h3 { font-size: 16px; font-weight: normal; margin: 0; color: black; }
 
-        /* Styling Tabel Print */
         .table-print { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 12pt; color: black; }
         .table-print th, .table-print td { border: 1px solid black !important; padding: 8px; }
         .table-print th { background-color: #f0f0f0 !important; font-weight: bold; text-align: center; }

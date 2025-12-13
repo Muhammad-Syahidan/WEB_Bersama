@@ -1,5 +1,4 @@
 <?php 
-    // Query Data Penjualan
     $sql = "SELECT idjual, nota, tanggal, grand_total_jual 
             FROM penjualan 
             ORDER BY tanggal DESC, idjual DESC";

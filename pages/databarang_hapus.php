@@ -6,7 +6,7 @@ $sql = "UPDATE databarang SET hapus=1 WHERE id=$id";
 
 if (mysqli_query($conn, $sql)) {
     echo '<script>alert("Data Berhasil Dihapus");</script>';
-    // REDIRECT PAKE POST
+   
     echo '
     <form id="redirectForm" action="main.php" method="POST">
         <input type="hidden" name="p" value="databarang_input">

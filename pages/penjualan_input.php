@@ -1,5 +1,5 @@
 <?php
-    // Generate Nota Otomatis
+   
     $nota_otomatis = "INV-" . date('YmdHis');
 ?>
 
@@ -27,7 +27,7 @@
                     <select name="kode" id="kode_barang" class="form-select" required onchange="cekHarga()">
                         <option value="" data-harga="0" data-stok="0">-- Pilih Barang --</option>
                         <?php 
-                            // Query Barang
+                           
                             $sql = "SELECT d.kode, d.nama, COALESCE(h.harga_jual, 0) as harga_jual, COALESCE(s.jumlah, 0) as jumlah 
                                     FROM databarang d
                                     LEFT JOIN harga h ON d.kode = h.kode

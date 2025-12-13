@@ -16,7 +16,7 @@
             mysqli_query($conn, $sqlstock);
             mysqli_query($conn, $sqlharga);
 
-            // REDIRECT PAKE POST (Supaya URL tetap main.php)
+        
             echo '
             <form id="redirectForm" action="../main.php" method="POST">
                 <input type="hidden" name="p" value="databarang_input">

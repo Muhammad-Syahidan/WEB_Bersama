@@ -1,6 +1,5 @@
 <?php 
-    // QUERY JOIN: Gabungkan Detail -> Databarang (untuk Nama)
-    // Menggunakan Kode sebagai penghubung
+
     $sql = "SELECT 
                 detail_beli.faktur,
                 detail_beli.kode,

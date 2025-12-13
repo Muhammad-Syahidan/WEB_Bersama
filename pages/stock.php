@@ -1,7 +1,5 @@
 <?php 
-    // PERBAIKAN QUERY:
-    // 1. Ambil 'stock.kode' langsung agar pasti muncul
-    // 2. Join ke 'databarang.kode' (bukan ID) jika nanti butuh nama barang
+   
     $sql = "SELECT 
                 stock.idstock, 
                 stock.kode, 

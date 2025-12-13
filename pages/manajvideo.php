@@ -2,7 +2,7 @@
     <h3 class="fw-bold mb-3 text-light">Manajemen Gallery Video</h3>
     <hr class="border-secondary">
 
-    <!-- Tombol Tambah Video -->
+   
     <div class="mb-3">
         <a href="main.php?p=manajvideo_input" class="btn btn-primary shadow-sm">
             Tambah Video
@@ -10,7 +10,7 @@
     </div>
 
     <?php 
-        // Ambil data video yang belum dihapus
+       
         $sql = "SELECT * FROM video WHERE hapus = 1";
         $result = $conn->query($sql);
     ?>
@@ -35,15 +35,15 @@
                             $keterangan = htmlspecialchars($row['keterangan']);
                         ?>
                         <tr>
-                            <!-- Nomor -->
+                           
                             <td class="text-center fw-semibold"><?= $id; ?></td>
 
-                            <!-- Kolom Video -->
+                          
                             <td class="text-center">
                                 <div class="video-wrapper mx-auto">
                                     <?php if (preg_match('/(youtube\.com|youtu\.be)/', $videoUrl)): ?>
                                         <?php 
-                                            // Konversi link menjadi embed YouTube
+                                          
                                             $embedUrl = preg_replace(
                                                 '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]+)/',
                                                 'https://www.youtube.com/embed/$1',
@@ -67,7 +67,7 @@
                                 </div>
                             </td>
 
-                            <!-- Kolom Keterangan -->
+                        
                             <td class="text-start">
                                 <span class="keterangan"
                                       data-bs-toggle="tooltip"
@@ -77,7 +77,7 @@
                                 </span>
                             </td>
 
-                            <!-- Kolom Opsi -->
+                           
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
                                     <a href="main.php?p=manajvideo_edit&id=<?= $id; ?>" 

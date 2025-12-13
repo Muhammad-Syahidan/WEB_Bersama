@@ -1,8 +1,8 @@
 <?php
-    // 1. Generate Ref Otomatis: PRC-TanggalJam (Mirip BUY di pembelian)
+  
     $ref_otomatis = "PRC-" . date('YmdHis');
 
-    // 2. Ambil Data Barang untuk Dropdown (Join Harga untuk dapat modal)
+
     $barang_data = [];
     $sql_brg = "SELECT b.kode, b.nama, h.harga_beli, h.harga_jual 
                 FROM databarang b
@@ -99,13 +99,13 @@
             <tbody class="text-center">
                 <?php 
                     $no = 1;
-                    // Tampilkan semua data dari array yang sudah kita ambil di atas
+                    
                     foreach($barang_data as $row):
                         $modal = $row['harga_beli'];
                         $jual  = $row['harga_jual'];
                         $untung = $jual - $modal;
                         
-                        // Warna Profit
+                     
                         $warna = ($untung > 0) ? "text-success" : (($untung < 0) ? "text-danger" : "text-muted");
                 ?>
                 <tr>
@@ -125,7 +125,7 @@
 </div>
 
 <script>
-// Ambil data barang dari PHP
+
 const dbBarang = <?= json_encode($barang_data) ?>;
 
 function isiOtomatis() {
@@ -135,14 +135,14 @@ function isiOtomatis() {
         let modal = parseInt(dbBarang[kode].harga_beli);
         let jualLama = parseInt(dbBarang[kode].harga_jual);
 
-        // Isi Harga Beli (Format Rupiah)
+   
         document.getElementById('harga_beli_asli').value = modal;
         document.getElementById('harga_beli_disp').value = modal.toLocaleString('id-ID');
         
-        // Isi Harga Jual (Nilai lama sebagai default, biar user tau)
+     
         document.getElementById('harga_jual_input').value = jualLama;
         
-        hitungProfit(); // Hitung langsung
+        hitungProfit(); 
     } else {
         resetForm();
     }
@@ -154,11 +154,9 @@ function hitungProfit() {
     
     let profit = jual - modal;
     
-    // Tampilkan Profit Rupiah
     let profitText = "Rp " + profit.toLocaleString('id-ID');
     document.getElementById('profit_display').value = profitText;
     
-    // Tampilkan Persentase
     let persen = 0;
     if (modal > 0) {
         persen = ((profit / modal) * 100).toFixed(1);
@@ -167,7 +165,6 @@ function hitungProfit() {
     let labelPersen = document.getElementById('persen_profit');
     labelPersen.innerText = "(" + persen + "%)";
     
-    // Ubah warna teks berdasarkan untung/rugi
     if(profit > 0) {
         document.getElementById('profit_display').classList.remove('text-danger', 'text-muted');
         document.getElementById('profit_display').classList.add('text-success');

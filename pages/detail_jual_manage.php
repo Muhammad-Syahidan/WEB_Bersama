@@ -21,7 +21,7 @@
             </thead>
             <tbody class="text-center">
                 <?php 
-                    // Mengambil data dari tabel PENJUALAN
+                
                     $sql = "SELECT idjual, nota, tanggal, grand_total_jual 
                             FROM penjualan 
                             ORDER BY idjual DESC";

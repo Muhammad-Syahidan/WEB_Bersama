@@ -7,7 +7,7 @@ if(isset($_POST['simpan'])){
     $idjual = $_POST['idjual'];    
     $nota   = $_POST['nota'];  
     $grand_total_jual = $_POST['grand_total_jual'];  
-    // Query Update
+  
     $sql = "UPDATE penjualan SET nota='$nota', grand_total_jual='$grand_total_jual' WHERE idjual='$idjual'";
 
     if (mysqli_query($conn, $sql)) {

@@ -27,12 +27,12 @@
             <select name="kode" class="form-select" required>
                 <option value="">-- Pilih Barang --</option>
                 <?php 
-                    // Ambil data barang dari databarang
+                  
                     $sql_brg = "SELECT * FROM databarang WHERE hapus = 0 ORDER BY nama ASC";
                     $q_brg = $conn->query($sql_brg);
                     
                     while($r = $q_brg->fetch_assoc()){
-                        // PENTING: Value diisi KODE (A1), bukan ID (1)
+                        
                         echo "<option value='".$r['kode']."'>".$r['nama']." (Kode: ".$r['kode'].")</option>";
                     }
                 ?>
