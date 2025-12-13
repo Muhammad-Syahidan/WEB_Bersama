@@ -1,66 +1,77 @@
 <?php
-// 1. WAJIB INCLUDE KONEKSI
-include "../assets/koneksi.php"; 
+// pages/penjualan_save.php
+// Pastikan path ke koneksi benar (relatif dari folder pages/)
+include "../assets/koneksi.php";
 
-// Cek apakah tombol ditekan
-if (isset($_POST['beli_sekarang'])) {
+// 1. Cek apakah tombol simpan diklik
+if (isset($_POST['simpan_jual'])) {
     
-    // 2. TANGKAP DATA & CEK APAKAH KOSONG
-    $nota             = $_POST['nota'];
-    $tanggal          = $_POST['tanggal'];
-    $kode             = $_POST['kode'];
-    $jumlah           = $_POST['jumlah'];
-    $grand_total_jual = $_POST['grand_total_jual'];
+    // 2. Tangkap semua data dari form
+    $nota        = $_POST['nota'];         // "PJ-231025-0001"
+    $tanggal     = $_POST['tanggal'];      // "2023-10-25"
+    $kode        = $_POST['kode'];         // "A001"
+    $jumlah      = (int)$_POST['jumlah'];  // 5 (pastikan jadi angka)
+    $total_harga = (int)$_POST['grand_total']; // 500000 (ambil dari hidden input)
 
-    // Debugging: Cek data sebelum disimpan (Bisa dihapus nanti)
-    if(empty($nota) || empty($kode) || empty($grand_total_jual)) {
-        die("STOP! Data tidak lengkap. <br>Nota: $nota <br>Kode: $kode <br>Total: $grand_total_jual");
+    // Validasi Server-side (jaga-jaga jika JS dibypass)
+    if(empty($nota) || empty($kode) || $jumlah <= 0 || $total_harga <= 0) {
+        echo "<script>alert('Data transaksi tidak valid!'); window.history.back();</script>";
+        exit;
+    }
+    
+    // Cek Stok di Database lagi untuk keamanan
+    $cek_stok = $conn->query("SELECT jumlah FROM stock WHERE kode = '$kode'");
+    $data_stok = $cek_stok->fetch_assoc();
+    if ($data_stok['jumlah'] < $jumlah) {
+         echo "<script>alert('Gagal! Stok di database tidak mencukupi.'); window.history.back();</script>";
+         exit;
     }
 
-    // 3. PROSES SIMPAN KE TABEL PENJUALAN (HEADER)
-    // Cek dulu, notanya sudah ada belum?
-    $cek_nota = $conn->query("SELECT * FROM penjualan WHERE nota = '$nota'");
-    
-    if ($cek_nota->num_rows == 0) {
-        // Jika belum ada, buat baru
-        $sql_header = "INSERT INTO penjualan (nota, tanggal, grand_total_jual) 
-                       VALUES ('$nota', '$tanggal', '$grand_total_jual')";
-        
-        if (!$conn->query($sql_header)) {
-            die("GAGAL SIMPAN TABEL PENJUALAN: " . $conn->error);
+    // Mulai Transaksi Database (agar atomik: semua berhasil atau semua gagal)
+    $conn->begin_transaction();
+
+    try {
+        // 3. Simpan ke Tabel PENJUALAN (Header Nota)
+        // Cek dulu, nota ini udah ada belum?
+        $cek_nota = $conn->query("SELECT nota FROM penjualan WHERE nota = '$nota'");
+        if ($cek_nota->num_rows == 0) {
+            // Nota baru: INSERT
+            $sql_head = "INSERT INTO penjualan (nota, tanggal, grand_total_jual) VALUES ('$nota', '$tanggal', $total_harga)";
+            $conn->query($sql_head);
+        } else {
+            // Nota sudah ada (nambah barang di nota yg sama): UPDATE totalnya
+            $sql_head = "UPDATE penjualan SET grand_total_jual = grand_total_jual + $total_harga WHERE nota = '$nota'";
+            $conn->query($sql_head);
         }
-    } else {
-        // Jika sudah ada (jarang terjadi di mode ini), update totalnya
-        $sql_header = "UPDATE penjualan SET grand_total_jual = grand_total_jual + $grand_total_jual 
-                       WHERE nota = '$nota'";
-        $conn->query($sql_header);
+
+        // 4. Simpan ke Tabel DETAIL_JUAL (Item Barang)
+        $sql_detail = "INSERT INTO detail_jual (nota, kode, jumlah, total_harga) 
+                       VALUES ('$nota', '$kode', $jumlah, $total_harga)";
+        $conn->query($sql_detail);
+        
+        // 5. Update Kurangi Stok Barang
+        $sql_stok = "UPDATE stock SET jumlah = jumlah - $jumlah WHERE kode = '$kode'";
+        $conn->query($sql_stok);
+
+        // Jika semua query berhasil, commit (simpan permanen)
+        $conn->commit();
+
+        // Redirect sukses ke halaman Laporan Detail Jual
+        echo "<script>
+            alert('Transaksi Penjualan Berhasil Disimpan!'); 
+            window.location.href = '../main.php?p=detail_jual_manage';
+        </script>";
+
+    } catch (Exception $e) {
+        // Jika ada error di salah satu query, rollback (batalkan semua)
+        $conn->rollback();
+        echo "Terjadi Error Database: " . $e->getMessage();
+        // Bisa tambahkan log error di sini jika perlu
     }
 
-    // 4. PROSES SIMPAN KE TABEL DETAIL_JUAL (RINCIAN) -- INI BAGIAN PENTINGNYA
-    // Pastikan nama kolom SAMA PERSIS dengan database Anda: 
-    // (nota, kode, jumlah, total_harga)
-    
-    $sql_detail = "INSERT INTO detail_jual (nota, kode, jumlah, total_harga) 
-                   VALUES ('$nota', '$kode', '$jumlah', '$grand_total_jual')";
-             
-    if (!$conn->query($sql_detail)) {
-        // Jika error, tampilkan pesan error SQL-nya biar ketahuan salahnya dimana
-        die("GAGAL SIMPAN KE DETAIL_JUAL: " . $conn->error . "<br>Query: " . $sql_detail);
-    }
-
-    // 5. UPDATE STOK GUDANG (KURANGI STOK)
-    $sql_stock = "UPDATE stock SET jumlah = jumlah - $jumlah WHERE kode = '$kode'";
-    
-    if (!$conn->query($sql_stock)) {
-        die("GAGAL UPDATE STOCK: " . $conn->error);
-    }
-
-    // 6. SUKSES
-    echo "<script>
-            alert('Pembelian Berhasil Disimpan!\\nNota: $nota'); 
-            window.location.href = '../main.php?p=penjualan';
-          </script>";
 } else {
-    echo "Akses dilarang. Silakan dari form pembelian.";
+    // Akses langsung tanpa form dilarang
+    header("Location: ../main.php?p=penjualan_input");
+    exit;
 }
 ?>
