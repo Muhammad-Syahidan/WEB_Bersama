@@ -15,7 +15,6 @@
         <select class="form-select" id="auth" name="auth">
             <option>Administrator</option>
             <option>Gudang</option>
-            <option>Penjualan</option>
             <option>Pembelian</option>
             <option>Ahli</option>
         </select>

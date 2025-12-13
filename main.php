@@ -58,7 +58,6 @@ $images=[]; $i=$conn->query("SELECT * FROM images WHERE hapus=1 ORDER BY id DESC
     <div class="container-fluid justify-content-center">
         <ul class="navbar-nav">
             <li class="nav-item"><a class="nav-link" href="main.php?p=home">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="main.php?p=profil">Profil</a></li>
 
             <?php if ($auth === "Administrator"): ?>
                 <li class="nav-item"><a class="nav-link" href="main.php?p=manajuser">Manajemen User</a></li>
