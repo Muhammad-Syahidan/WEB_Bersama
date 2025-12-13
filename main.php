@@ -133,13 +133,6 @@ $images=[]; $i=$conn->query("SELECT * FROM images WHERE hapus=1 ORDER BY id DESC
                         <li><a class="dropdown-item" href="main.php?p=detail_jual_manage">Detail Jual</a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Laporan</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="main.php?p=penjualan">Lap. Penjualan</a></li>
-                        <li><a class="dropdown-item" href="main.php?p=detail_jual">Detail Jual (Cetak)</a></li>
-                        <li><a class="dropdown-item" href="main.php?p=harga">Cek Harga</a></li>
-                    </ul>
-                </li>
             <?php endif; ?>
 
             <?php if ($auth === "Pembelian"): ?>
@@ -147,12 +140,6 @@ $images=[]; $i=$conn->query("SELECT * FROM images WHERE hapus=1 ORDER BY id DESC
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="main.php?p=pembelian_manage">Transaksi Pembelian</a></li>
                         <li><a class="dropdown-item" href="main.php?p=detail_beli_manage">Detail Beli</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Laporan</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="main.php?p=pembelian">Lap. Pembelian</a></li>
-                        <li><a class="dropdown-item" href="main.php?p=detail_beli">Detail Beli (Cetak)</a></li>
                     </ul>
                 </li>
             <?php endif; ?>
