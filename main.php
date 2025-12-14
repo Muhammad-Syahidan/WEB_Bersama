@@ -79,7 +79,7 @@ if($i)while($r=$i->fetch_assoc())$images[]=$r;
         </button>
         <div class="collapse navbar-collapse justify-content-center" id="mynavbar">
             <ul class="navbar-nav gap-3">
-                <li class="nav-item"><a class="nav-link active" href="main.php?p=home"><i class="bi bi-house-door-fill"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link active" href="main.php?p=home"> Home</a></li>
 
                  <?php if (in_array($auth, ["Administrator", "Ahli"])): ?>
                     <li class="nav-item"><a class="nav-link" href="main.php?p=manajuser">Manajemen User</a></li>
