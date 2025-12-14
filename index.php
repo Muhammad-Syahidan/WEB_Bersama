@@ -29,7 +29,6 @@
         <option value="Administrator">Administrator</option>
         <option value="Gudang">Gudang</option>
         <option value="Penjualan">Penjualan</option>
-        <option value="User">Pemasaran</option>
         <option value="Ahli">Ahli</option>
 
       </select>
